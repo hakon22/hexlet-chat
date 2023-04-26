@@ -5,10 +5,10 @@ install:
 	npm ci
 
 start-frontend:
-	make -C frontend start
+	npm -C frontend start
 
 start-backend:
-	npx start-server
+	npx start-server -s ./frontend/build
 
 deploy:
 	git push heroku main
