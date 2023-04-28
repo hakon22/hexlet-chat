@@ -8,6 +8,7 @@ import store from '../slices/index.js';
 import AuthContext from '../pages/Context.jsx';
 
 const App = () => {
+  const { t } = this.props.i18n;
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {

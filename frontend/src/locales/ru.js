@@ -1,1 +1,23 @@
-export default {};
+export default {
+  translation: {
+    to_come: 'Войти',
+    name_link_chat: 'Хекслет Чат',
+    name_posts: 'Новости',
+    nameNotice: 'Начните читать RSS сегодня! Это легко, это красиво.',
+    example: 'Пример: https://ru.hexlet.io/lessons.rss',
+    label: 'Ссылка RSS',
+    submitButtonName: 'Добавить',
+    errorValid: 'Ссылка должна быть валидным URL',
+    not_null: 'Не должно быть пустым',
+    errorNetwork: 'Ошибка сети',
+    errorDuble: 'RSS уже существует',
+    addSuccess: 'RSS успешно загружен',
+    dontParse: 'Ресурс не содержит валидный RSS',
+    view: 'Просмотр',
+    project_text: 'created by ',
+    project_link: 'https://github.com/hakon22/frontend-project-11',
+    project_creator: 'Алексей Каледкин',
+    button_close: 'Закрыть',
+    button_read_full: 'Читать полностью',
+  },
+};
