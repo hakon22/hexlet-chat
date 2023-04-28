@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-import routes from '../routes/routes.js';
+import routes from '../pages/routes.js';
 
 export const fetchToken = createAsyncThunk(
   'token/fetchToken',
@@ -25,11 +25,12 @@ const loginSlice = createSlice({
         state.token = payload;
         state.loadingStatus = 'idle';
         state.error = null;
+        window.localStorage.setItem('token', payload);
       })
       .addCase(fetchToken.rejected, (state, action) => {
         state.loadingStatus = 'failed';
-        state.error = action.error;
-      })
+        state.error = action.error.message;
+      });
   },
 });
 
