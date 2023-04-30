@@ -6,7 +6,7 @@ export const fetchToken = createAsyncThunk(
   'token/fetchToken',
   async (data) => {
     const response = await axios.post(routes.login, data);
-    return response.data.token;
+    return response.data;
   },
 );
 
@@ -22,10 +22,12 @@ const loginSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchToken.fulfilled, (state, { payload }) => {
-        state.token = payload;
+        const { token, username } = payload;
+        state.token = token;
         state.loadingStatus = 'idle';
         state.error = null;
-        window.localStorage.setItem('token', payload);
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem('username', username);
       })
       .addCase(fetchToken.rejected, (state, action) => {
         state.loadingStatus = 'failed';
