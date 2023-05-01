@@ -12,10 +12,7 @@ export const fetchLoading = createAsyncThunk(
   },
 );
 
-const loadingAdapter = createEntityAdapter({
-  selectChannels: (loading) => loading.channels,
-  selectMessages: (loading) => loading.messages,
-});
+const loadingAdapter = createEntityAdapter({});
 
 const loadingSlice = createSlice({
   name: 'loading',

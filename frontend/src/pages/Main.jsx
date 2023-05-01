@@ -1,29 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
-import { actions, fetchLoading } from '../slices/loadingSlice.js';
+import { fetchLoading } from '../slices/loadingSlice.js';
 
-const Main = () => {
+const Main = ({ api }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const username = window.localStorage.getItem('username');
   const { channels, messages, currentChannelId } = useSelector((state) => state.loading);
   const [messageValue, setMessage] = useState('');
-  const input = useRef(null);
-  // const chatRef = useRef(null);
+  const input = useRef();
+  const chatRef = useRef();
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
     if (!token) navigate('/login');
     dispatch(fetchLoading(token));
     input.current.focus();
-    // chatRef.scrollTop = chatRef.scrollHeight;
-    // window.scrollTo(0, chatRef.scrollHeight);
-  }, [dispatch, navigate]);
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [dispatch, navigate, messages.length]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -66,12 +64,12 @@ const Main = () => {
                   }).join('')}
                 </b>
               </p>
-              <span className="text-muted">0 сообщений</span>
+              <span className="text-muted">{t('count_message', { count: messages.length })}</span>
             </div>
-            <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+            <div ref={chatRef} id="messages-box" className="chat-messages overflow-auto px-5 ">
               {messages.length > 0 && messages.map((message) => (
                 <div key={message.id} className="text-break mb-2">
-                  <b>{message.username}</b>
+                  {username === message.username ? <b>{message.username}</b> : message.username}
                   :
                   {' '}
                   {message.body}
@@ -83,10 +81,8 @@ const Main = () => {
                 noValidate
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const socket = io();
-                  const mes = { body: messageValue, channelId: currentChannelId, username };
-                  socket.emit('newMessage', mes);
-                  socket.on('newMessage', (data) => dispatch(actions.addMessage(data)));
+                  const mes = { body: messageValue.trim(), channelId: currentChannelId, username };
+                  api.sendMessage(mes);
                   setMessage('');
                 }}
                 className="py-1 border rounded-2"
@@ -99,8 +95,8 @@ const Main = () => {
                     ref={input}
                     onChange={(e) => setMessage(e.target.value)}
                     name="body"
-                    aria-label="Новое сообщение"
-                    placeholder="Введите сообщение..."
+                    aria-label={t('new_message')}
+                    placeholder={t('input_message')}
                     className="border-0 p-0 ps-2 form-control"
                     value={messageValue}
                   />
@@ -108,7 +104,7 @@ const Main = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
                       <path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
                     </svg>
-                    <span className="visually-hidden">Отправить</span>
+                    <span className="visually-hidden">{t('post')}</span>
                   </button>
                 </div>
               </form>
