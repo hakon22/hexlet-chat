@@ -23,6 +23,9 @@ const loadingSlice = createSlice({
     addMessage: (state, { payload }) => {
       state.messages.push(payload);
     },
+    changeChannel: (state, { payload }) => {
+      state.currentChannelId = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
