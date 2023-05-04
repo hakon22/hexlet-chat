@@ -36,6 +36,9 @@ const App = () => {
   };
 
   socket.on('newMessage', (data) => store.dispatch(actions.addMessage(data)));
+  socket.on('newChannel', (data) => store.dispatch(actions.addChannel(data)));
+  socket.on('renameChannel', (data) => store.dispatch(actions.renameChannel(data)));
+  socket.on('removeChannel', (data) => store.dispatch(actions.removeChannel(data)));
 
   return (
     <Provider store={store}>

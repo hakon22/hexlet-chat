@@ -26,6 +26,18 @@ const loadingSlice = createSlice({
     changeChannel: (state, { payload }) => {
       state.currentChannelId = payload;
     },
+    addChannel: (state, { payload }) => {
+      state.channels.push(payload);
+      state.currentChannelId = payload.id;
+    },
+    removeChannel: (state, { payload }) => {
+      state.channels.push(payload);
+      state.currentChannelId = payload.id;
+    },
+    renameChannel: (state, { payload }) => {
+      const channel = state.channels.find((c) => c.id === payload.id);
+      channel.name = payload.name;
+    },
   },
   extraReducers: (builder) => {
     builder

@@ -20,5 +20,7 @@ export default {
     new_message: 'Новое сообщение',
     input_message: 'Введите сообщение...',
     post: 'Отправить',
+    add_channel: 'Добавить канал',
+    cancel: 'Отменить',
   },
 };
