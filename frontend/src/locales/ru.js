@@ -21,6 +21,11 @@ export default {
     input_message: 'Введите сообщение...',
     post: 'Отправить',
     add_channel: 'Добавить канал',
+    delete_channel: 'Удалить канал',
+    rename_channel: 'Переименовать канал',
     cancel: 'Отменить',
+    delete: 'Удалить',
+    rename: 'Переименовать',
+    realy: 'Уверены?',
   },
 };

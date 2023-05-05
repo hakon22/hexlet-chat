@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
 
 const ModalF = ({ api }) => {
@@ -47,6 +48,85 @@ const ModalF = ({ api }) => {
               </div>
             </Form.Group>
           </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};
+
+export const ModalRename = ({
+  api, t, id, name,
+}) => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const input = useRef();
+
+  return (
+    <>
+      <Dropdown.Item onClick={handleShow}>{t('rename')}</Dropdown.Item>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('rename_channel')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const channelName = { name: e.target.elements.newChannel.value, id };
+              api.renameChannel(channelName);
+              handleClose();
+            }}
+          >
+            <Form.Group controlId="renameChannel">
+              <Form.Label className="visually-hidden">ChannelName</Form.Label>
+              <Form.Control ref={input} className="mb-2" defaultValue={name} onFocus={(e) => e.target.select()} autoFocus />
+              <div className="d-flex justify-content-end">
+                <Button className="me-2" variant="secondary" onClick={handleClose}>
+                  {t('cancel')}
+                </Button>
+                <Button variant="primary" type="submit">
+                  {t('post')}
+                </Button>
+              </div>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};
+
+export const ModalDelete = ({
+  api, t, id,
+}) => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    <>
+      <Dropdown.Item onClick={handleShow}>{t('delete')}</Dropdown.Item>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('delete_channel')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="lead">{t('realy')}</p>
+          <div className="d-flex justify-content-end">
+            <Button className="me-2" variant="secondary" onClick={handleClose}>
+              {t('cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                api.removeChannel({ id });
+                handleClose();
+              }}
+            >
+              {t('delete')}
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
     </>
