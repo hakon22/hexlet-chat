@@ -6,7 +6,7 @@ import cn from 'classnames';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { fetchLoading, actions } from '../slices/loadingSlice.js';
-import ModalAdd, { ModalDelete, ModalRename } from '../components/ModalF.jsx';
+import { ModalAdd, ModalDelete, ModalRename } from '../components/ModalWindow.jsx';
 
 const Main = ({ api }) => {
   const navigate = useNavigate();

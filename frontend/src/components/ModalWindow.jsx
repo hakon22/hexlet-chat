@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
 
-const ModalF = ({ api }) => {
+export const ModalAdd = ({ api }) => {
   const { t } = useTranslation();
   const newChannel = useRef();
   const [show, setShow] = useState(false);
@@ -80,7 +80,7 @@ export const ModalRename = ({
           >
             <Form.Group controlId="renameChannel">
               <Form.Label className="visually-hidden">ChannelName</Form.Label>
-              <Form.Control ref={input} className="mb-2" defaultValue={name} onFocus={(e) => e.target.select()} autoFocus />
+              <Form.Control ref={input} className="mb-2" defaultValue={name} onBlur={(e) => e.target.select()} autoFocus />
               <div className="d-flex justify-content-end">
                 <Button className="me-2" variant="secondary" onClick={handleClose}>
                   {t('cancel')}
@@ -132,5 +132,3 @@ export const ModalDelete = ({
     </>
   );
 };
-
-export default ModalF;
