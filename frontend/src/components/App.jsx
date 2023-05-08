@@ -5,9 +5,9 @@ import { io } from 'socket.io-client';
 import Page404 from '../pages/Page404.jsx';
 import Login from '../pages/Login.jsx';
 import Main from '../pages/Main.jsx';
-import Nav from '../pages/Nav.jsx';
+import Nav from './Nav.jsx';
 import store from '../slices/index.js';
-import AuthContext from '../pages/Context.jsx';
+import AuthContext from './Context.jsx';
 import { actions } from '../slices/loadingSlice.js';
 
 const App = () => {
@@ -25,6 +25,9 @@ const App = () => {
     if (response.status !== 'ok') {
       // eslint-disable-next-line no-alert
       alert('ошибка интернет соединения');
+    }
+    if (response.data) {
+      store.dispatch(actions.changeChannel(response.data.id));
     }
   });
 

@@ -28,17 +28,19 @@ const loadingSlice = createSlice({
     },
     addChannel: (state, { payload }) => {
       state.channels.push(payload);
-      state.currentChannelId = payload.id;
     },
     removeChannel: (state, { payload }) => {
       const channels = state.channels.filter((e) => e.id !== payload.id);
       state.channels = channels;
-      state.currentChannelId = 1;
+      if (payload.id === state.currentChannelId) {
+        state.currentChannelId = 1;
+      }
+      const newMes = state.messages.filter((mes) => mes.channelId !== payload.id);
+      state.messages = newMes;
     },
     renameChannel: (state, { payload }) => {
       const channel = state.channels.find((c) => c.id === payload.id);
       channel.name = payload.name;
-      state.currentChannelId = payload.id;
     },
   },
   extraReducers: (builder) => {

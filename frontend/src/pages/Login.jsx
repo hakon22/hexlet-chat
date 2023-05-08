@@ -1,7 +1,7 @@
 // import { useSelector } from 'react-redux';
 // import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import FormikForm from './FormikForm.jsx';
+import FormikForm from '../components/FormikForm.jsx';
 
 const Login = () => {
   const { t } = useTranslation();

@@ -51,7 +51,7 @@ const Main = ({ api }) => {
                 'border-0': true,
               });
               return (
-                <li ref={channel.id === currentChannelId ? channelsRef : null} key={channel.id} className="nav-item w-100">
+                <li key={channel.id} className="nav-item w-100">
                   {channel.removable ? (
                     <div role="group" className="d-flex dropdown btn-group">
                       <button onClick={() => dispatch(actions.changeChannel(channel.id))} type="button" className={style}>
