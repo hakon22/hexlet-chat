@@ -2,29 +2,27 @@ import { Formik, Form, Field } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import { fetchToken } from '../slices/loginSlice.js';
 import AuthContext from './Context.jsx';
 
-const FormikForm = () => {
+const LoginForm = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { loggedIn, logIn } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [storeErrors, setErrors] = useState(useSelector((state) => state.login.message));
 
   const SignupSchema = Yup.object().shape({
-    username: Yup.string().required(t('error_yup')),
-    password: Yup.string().required(t('error_yup')),
+    username: Yup.string().required(t('validation.required')),
+    password: Yup.string().required(t('validation.required')),
   });
 
   useEffect(() => {
     if (loggedIn) {
-      navigate('/');
+      window.location.replace('/');
     }
-  }, [loggedIn, navigate]);
+  }, [loggedIn]);
   return (
     <Formik
       initialValues={{
@@ -37,7 +35,7 @@ const FormikForm = () => {
         if (requestStatus === 'fulfilled') {
           logIn();
         } else {
-          setErrors(t('error_auth'));
+          setErrors(t('validation.loginFailed'));
         }
       }}
     >
@@ -67,4 +65,4 @@ const FormikForm = () => {
   );
 };
 
-export default FormikForm;
+export default LoginForm;

@@ -20,6 +20,7 @@ const Main = ({ api }) => {
     loadingStatus,
   } = useSelector((state) => state.loading);
   const [messageValue, setMessage] = useState('');
+  const lastChannels = channels.at(-1).id;
   const input = useRef();
   const chatRef = useRef();
   const channelsRef = useRef();
@@ -31,10 +32,15 @@ const Main = ({ api }) => {
   }, [dispatch, navigate]);
 
   useEffect(() => {
-    input.current.focus();
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    channelsRef.current.scrollIntoView();
-  }, [messages.length, currentChannelId]);
+    if (currentChannelId === 1) {
+      channelsRef.current.scrollTop = 0;
+    }
+    if (currentChannelId === lastChannels) {
+      channelsRef.current.scrollTop = channelsRef.current.scrollHeight;
+    }
+    setTimeout(() => input.current.focus(), 1);
+  }, [messages.length, currentChannelId, lastChannels]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -72,7 +78,7 @@ const Main = ({ api }) => {
                           variant="secondary"
                         >
                           <ModalDelete api={api} t={t} id={channel.id} />
-                          <ModalRename api={api} t={t} id={channel.id} name={channel.name} />
+                          <ModalRename api={api} t={t} id={channel.id} curChName={channel.name} />
                         </Dropdown.Menu>
                       </Dropdown>
                     </div>

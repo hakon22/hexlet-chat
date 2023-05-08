@@ -1,11 +1,9 @@
 export default {
   translation: {
     to_come: 'Войти',
-    name_link_chat: 'Хекслет Чат',
-    not_account: 'Нет аккаунта?',
-    registr: 'Регистрация',
-    error_auth: 'Неверные имя пользователя или пароль',
-    error_yup: 'Обязательное поле',
+    name_link_chat: 'Hexlet Chat',
+    not_account: 'Нет аккаунта? ',
+    have_account: 'Есть аккаунт? ',
     you_nick: 'Ваш ник',
     you_pass: 'Пароль',
     page_not_found: 'Страница не найдена',
@@ -27,5 +25,21 @@ export default {
     delete: 'Удалить',
     rename: 'Переименовать',
     realy: 'Уверены?',
+    validation: {
+      required: 'Обязательное поле',
+      loginFailed: 'Неверные имя пользователя или пароль',
+      requirements: 'От 3 до 20 символов',
+      uniq: 'Имя канала должно быть уникальным',
+      passMin: 'Не менее 6 символов',
+    },
+    signup: {
+      title: 'Регистрация',
+      username: 'Имя пользователя',
+      password: 'Пароль',
+      confirm: 'Подтвердите пароль',
+      submit: 'Зарегистрироваться',
+      mustMatch: 'Пароли должны совпадать',
+      alreadyExists: 'Такой пользователь уже существует',
+    },
   },
 };

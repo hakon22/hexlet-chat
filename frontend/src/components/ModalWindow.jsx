@@ -5,26 +5,14 @@ import Modal from 'react-bootstrap/Modal';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
-
-const ChannelSchema = (channels) => Yup.object().shape({
-  name: Yup
-    .string()
-    .trim()
-    .required()
-    .min(3)
-    .max(20)
-    .notOneOf(channels),
-});
+import { channelNameValidation } from '../validations/validations.js';
 
 export const ModalAdd = ({ api }) => {
   const { t } = useTranslation();
-  const newChannel = useRef();
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-  // const [formikDef, setDefaultForm] = useState('');
   const { channels, loadingStatus } = useSelector((state) => state.loading);
   const channelsName = channels.map((channel) => channel.name);
 
@@ -32,14 +20,13 @@ export const ModalAdd = ({ api }) => {
     initialValues: {
       name: '',
     },
-    validationSchema: ChannelSchema(channelsName),
-    onSubmit: (e) => {
-      const channelName = { name: e.target.elements.newChannel.value };
-      api.createChannel(channelName);
+    validationSchema: channelNameValidation(channelsName),
+    onSubmit: (name, { setSubmitting, resetForm }) => {
+      api.createChannel(name);
+      setSubmitting(false);
+      resetForm();
       handleClose();
     },
-    validateOnBlur: false,
-    validateOnChange: false,
   });
 
   return (
@@ -65,7 +52,6 @@ export const ModalAdd = ({ api }) => {
         </Modal.Header>
         <Modal.Body>
           <Form
-            ref={newChannel}
             onSubmit={formik.handleSubmit}
           >
             <Form.Group controlId="newChannel">
@@ -81,7 +67,7 @@ export const ModalAdd = ({ api }) => {
                 name="name"
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
+                {t(formik.errors.name)}
               </Form.Control.Feedback>
               <div className="d-flex justify-content-end">
                 <Button
@@ -108,20 +94,37 @@ export const ModalAdd = ({ api }) => {
 };
 
 export const ModalRename = ({
-  api, t, id, name,
+  api, t, id, curChName,
 }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const input = useRef();
-  const { loadingStatus } = useSelector((state) => state.loading);
+  const { channels, loadingStatus } = useSelector((state) => state.loading);
+  const channelsName = channels.map((channel) => channel.name);
+
+  const formik = useFormik({
+    initialValues: {
+      name: curChName,
+    },
+    validationSchema: channelNameValidation(channelsName),
+    onSubmit: ({ name }, { setSubmitting }) => {
+      api.renameChannel({ name, id });
+      handleClose();
+      formik.errors.name = '';
+      setSubmitting(false);
+    },
+  });
 
   return (
     <>
       <Button type="button" className="dropdown-item" onClick={handleShow}>{t('rename')}</Button>
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={() => {
+          handleClose();
+          formik.errors.name = '';
+        }}
         centered
         onShow={() => input.current.select()}
       >
@@ -130,21 +133,36 @@ export const ModalRename = ({
         </Modal.Header>
         <Modal.Body>
           <Form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const channelName = { name: e.target.elements.input.value, id };
-              api.renameChannel(channelName);
-              handleClose();
-            }}
+            onSubmit={formik.handleSubmit}
           >
             <Form.Group controlId="input">
               <Form.Label className="visually-hidden">ChannelRename</Form.Label>
-              <Form.Control autoFocus ref={input} defaultValue={name} className="mb-2" disabled={loadingStatus === 'loading'} />
+              <Form.Control
+                autoFocus
+                ref={input}
+                className="mb-2"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                disabled={loadingStatus === 'loading' || formik.isSubmitting}
+                isInvalid={formik.errors.name && formik.touched.name}
+                onBlur={formik.handleBlur}
+                name="name"
+              />
+              <Form.Control.Feedback type="invalid">
+                {t(formik.errors.name)}
+              </Form.Control.Feedback>
               <div className="d-flex justify-content-end">
-                <Button className="me-2" variant="secondary" onClick={handleClose}>
+                <Button
+                  className="me-2"
+                  variant="secondary"
+                  onClick={() => {
+                    handleClose();
+                    formik.errors.name = '';
+                  }}
+                >
                   {t('cancel')}
                 </Button>
-                <Button variant="primary" type="submit" disabled={loadingStatus === 'loading'}>
+                <Button variant="primary" type="submit" disabled={loadingStatus === 'loading' || formik.isSubmitting}>
                   {t('post')}
                 </Button>
               </div>

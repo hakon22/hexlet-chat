@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { io } from 'socket.io-client';
 import Page404 from '../pages/Page404.jsx';
 import Login from '../pages/Login.jsx';
+import Signup from '../pages/Signup.jsx';
 import Main from '../pages/Main.jsx';
 import Nav from './Nav.jsx';
 import store from '../slices/index.js';
@@ -47,11 +48,12 @@ const App = () => {
     <Provider store={store}>
       <AuthContext.Provider value={authServices}>
         <div className="d-flex flex-column h-100">
-          <Nav />
           <BrowserRouter>
+            <Nav />
             <Routes>
               <Route path="/" element={<Main api={api} />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </BrowserRouter>

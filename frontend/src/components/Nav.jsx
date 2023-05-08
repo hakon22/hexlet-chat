@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import AuthContext from './Context.jsx';
+import routes from '../pages/routes.js';
 
 const Nav = () => {
   const { t } = useTranslation();
@@ -10,7 +12,7 @@ const Nav = () => {
   return (
     <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
       <div className="container">
-        <a className="navbar-brand" href="/">{t('name_link_chat')}</a>
+        <Link className="navbar-brand" to={routes.homePage}>{t('name_link_chat')}</Link>
         {auth > 0 && (
         <button
           type="button"
