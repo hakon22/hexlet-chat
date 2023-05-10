@@ -12,7 +12,7 @@ const Signup = () => {
           <div className="card shadow-sm">
             <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <div>
-                <img className="rounded-circle" src="https://frontend-chat-ru.hexlet.app/static/media/avatar_1.6084447160acc893a24d.jpg" alt={t('registr')} />
+                <img className="rounded-circle" src="./avatar_1.jpg" alt={t('registr')} />
               </div>
               <SignupForm />
             </div>
