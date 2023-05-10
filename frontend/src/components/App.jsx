@@ -1,6 +1,10 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter, Routes, Route, Navigate,
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { io } from 'socket.io-client';
 import Page404 from '../pages/Page404.jsx';
 import Login from '../pages/Login.jsx';
@@ -12,20 +16,22 @@ import AuthContext from './Context.jsx';
 import { actions } from '../slices/loadingSlice.js';
 
 const App = () => {
+  const { t } = useTranslation();
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     setLoggedIn(false);
   };
+
   const authServices = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
 
   const socket = io();
 
   const socketConnect = (param, arg) => socket.emit(param, arg, (response) => {
-    if (response.status !== 'ok') {
-      // eslint-disable-next-line no-alert
-      alert('ошибка интернет соединения');
+    if (!response) {
+      throw new Error(t('toast.networkErr'));
     }
     if (response.data) {
       store.dispatch(actions.changeChannel(response.data.id));
@@ -44,21 +50,23 @@ const App = () => {
   socket.on('renameChannel', (data) => store.dispatch(actions.renameChannel(data)));
   socket.on('removeChannel', (data) => store.dispatch(actions.removeChannel(data)));
 
+  const username = window.localStorage.getItem('username');
+
   return (
     <Provider store={store}>
       <AuthContext.Provider value={authServices}>
         <div className="d-flex flex-column h-100">
           <BrowserRouter>
             <Nav />
+            <ToastContainer />
             <Routes>
-              <Route path="/" element={<Main api={api} />} />
+              <Route path="/" element={username ? <Main api={api} /> : <Navigate to="/login" />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </BrowserRouter>
         </div>
-        <div className="Toastify" />
       </AuthContext.Provider>
     </Provider>
   );

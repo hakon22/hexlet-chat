@@ -1,35 +1,29 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
+import { ButtonGroup, Dropdown } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 import { fetchLoading, actions } from '../slices/loadingSlice.js';
 import { ModalAdd, ModalDelete, ModalRename } from '../components/ModalWindow.jsx';
 
 const Main = ({ api }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const username = window.localStorage.getItem('username');
-  const {
-    channels,
-    messages,
-    currentChannelId,
-    loadingStatus,
-  } = useSelector((state) => state.loading);
+  const { channels, messages, currentChannelId } = useSelector((state) => state.loading);
   const [messageValue, setMessage] = useState('');
-  const lastChannels = channels.at(-1).id;
+  const [isSubmit, setSubmit] = useState(false);
+  const lastChannels = channels.length > 0 ? channels.at(-1).id : null;
   const input = useRef();
   const chatRef = useRef();
   const channelsRef = useRef();
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
-    if (!token) navigate('/login');
     dispatch(fetchLoading(token));
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   useEffect(() => {
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
@@ -40,7 +34,7 @@ const Main = ({ api }) => {
       channelsRef.current.scrollTop = channelsRef.current.scrollHeight;
     }
     setTimeout(() => input.current.focus(), 1);
-  }, [messages.length, currentChannelId, lastChannels]);
+  }, [messages.length, currentChannelId, lastChannels, isSubmit]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -126,8 +120,15 @@ const Main = ({ api }) => {
                 noValidate
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const mes = { body: messageValue.trim(), channelId: currentChannelId, username };
-                  api.sendMessage(mes);
+                  const text = leoProfanity.clean(messageValue);
+                  const mes = { body: text, channelId: currentChannelId, username };
+                  const data = api.sendMessage(mes);
+                  if (!data.connected) {
+                    setSubmit(true);
+                    setTimeout(() => setSubmit(false), 3500);
+                    toast.error(t('toast.networkErr'));
+                    return;
+                  }
                   setMessage('');
                 }}
                 className="py-1 border rounded-2"
@@ -144,8 +145,9 @@ const Main = ({ api }) => {
                     placeholder={t('input_message')}
                     className="border-0 p-0 ps-2 form-control"
                     value={messageValue}
+                    disabled={isSubmit}
                   />
-                  <button type="submit" className="btn btn-group-vertical border-0" disabled={!messageValue || loadingStatus === 'loading'}>
+                  <button type="submit" className="btn btn-group-vertical border-0" disabled={!messageValue || isSubmit}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
                       <path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
                     </svg>

@@ -1,19 +1,22 @@
 import { useState, useRef } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Dropdown from 'react-bootstrap/Dropdown';
+import {
+  Form, Modal, Dropdown, Button,
+} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 import { channelNameValidation } from '../validations/validations.js';
+
+const notify = (text, type) => toast[type](text);
 
 export const ModalAdd = ({ api }) => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-  const { channels, loadingStatus } = useSelector((state) => state.loading);
+  const { channels } = useSelector((state) => state.loading);
   const channelsName = channels.map((channel) => channel.name);
 
   const formik = useFormik({
@@ -21,11 +24,24 @@ export const ModalAdd = ({ api }) => {
       name: '',
     },
     validationSchema: channelNameValidation(channelsName),
-    onSubmit: (name, { setSubmitting, resetForm }) => {
-      api.createChannel(name);
+    onSubmit: ({ name }, { setSubmitting, resetForm, setTouched }) => {
+      const chName = leoProfanity.clean(name);
+      if (leoProfanity.check(name)) {
+        formik.values.name = chName;
+        setSubmitting(false);
+        setTouched({ name: true });
+        return;
+      }
+      const data = api.createChannel({ name: chName });
+      if (!data.connected) {
+        setTimeout(() => setSubmitting(false), 3500);
+        notify(t('toast.networkErr'), 'error');
+        return;
+      }
       setSubmitting(false);
       resetForm();
       handleClose();
+      notify(t('toast.created'), 'success');
     },
   });
 
@@ -61,7 +77,7 @@ export const ModalAdd = ({ api }) => {
                 onChange={formik.handleChange}
                 value={formik.values.name}
                 autoFocus
-                disabled={loadingStatus === 'loading' || formik.isSubmitting}
+                disabled={formik.isSubmitting}
                 isInvalid={formik.errors.name && formik.touched.name}
                 onBlur={formik.handleBlur}
                 name="name"
@@ -81,7 +97,7 @@ export const ModalAdd = ({ api }) => {
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="primary" type="submit" disabled={loadingStatus === 'loading' || formik.isSubmitting}>
+                <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
                   {t('post')}
                 </Button>
               </div>
@@ -100,7 +116,7 @@ export const ModalRename = ({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const input = useRef();
-  const { channels, loadingStatus } = useSelector((state) => state.loading);
+  const { channels } = useSelector((state) => state.loading);
   const channelsName = channels.map((channel) => channel.name);
 
   const formik = useFormik({
@@ -108,11 +124,24 @@ export const ModalRename = ({
       name: curChName,
     },
     validationSchema: channelNameValidation(channelsName),
-    onSubmit: ({ name }, { setSubmitting }) => {
-      api.renameChannel({ name, id });
+    onSubmit: ({ name }, { setSubmitting, setTouched }) => {
+      const chName = leoProfanity.clean(name);
+      if (leoProfanity.check(name)) {
+        formik.values.name = chName;
+        setSubmitting(false);
+        setTouched({ name: true });
+        return;
+      }
+      const data = api.renameChannel({ name: chName, id });
+      if (!data.connected) {
+        setTimeout(() => setSubmitting(false), 3500);
+        notify(t('toast.networkErr'), 'error');
+        return;
+      }
       handleClose();
       formik.errors.name = '';
       setSubmitting(false);
+      notify(t('toast.renamed'), 'success');
     },
   });
 
@@ -143,7 +172,7 @@ export const ModalRename = ({
                 className="mb-2"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                disabled={loadingStatus === 'loading' || formik.isSubmitting}
+                disabled={formik.isSubmitting}
                 isInvalid={formik.errors.name && formik.touched.name}
                 onBlur={formik.handleBlur}
                 name="name"
@@ -162,7 +191,7 @@ export const ModalRename = ({
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="primary" type="submit" disabled={loadingStatus === 'loading' || formik.isSubmitting}>
+                <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
                   {t('post')}
                 </Button>
               </div>
@@ -174,12 +203,24 @@ export const ModalRename = ({
   );
 };
 
-export const ModalDelete = ({
-  api, t, id,
-}) => {
+export const ModalDelete = ({ api, t, id }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const formik = useFormik({
+    initialValues: {},
+    onSubmit: (name, { setSubmitting }) => {
+      const data = api.removeChannel({ id });
+      if (!data.connected) {
+        setTimeout(() => setSubmitting(false), 3500);
+        notify(t('toast.networkErr'), 'error');
+        return;
+      }
+      handleClose();
+      notify(t('toast.removed'), 'success');
+    },
+  });
 
   return (
     <>
@@ -191,18 +232,20 @@ export const ModalDelete = ({
         <Modal.Body>
           <p className="lead">{t('realy')}</p>
           <div className="d-flex justify-content-end">
-            <Button className="me-2" variant="secondary" onClick={handleClose}>
-              {t('cancel')}
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                api.removeChannel({ id });
-                handleClose();
-              }}
+            <Form
+              onSubmit={formik.handleSubmit}
             >
-              {t('delete')}
-            </Button>
+              <Button className="me-2" variant="secondary" onClick={handleClose}>
+                {t('cancel')}
+              </Button>
+              <Button
+                variant="danger"
+                type="submit"
+                disabled={formik.isSubmitting}
+              >
+                {t('delete')}
+              </Button>
+            </Form>
           </div>
         </Modal.Body>
       </Modal>

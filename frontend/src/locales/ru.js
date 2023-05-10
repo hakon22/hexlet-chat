@@ -41,5 +41,12 @@ export default {
       mustMatch: 'Пароли должны совпадать',
       alreadyExists: 'Такой пользователь уже существует',
     },
+    toast: {
+      created: 'Канал создан',
+      renamed: 'Канал переименован',
+      removed: 'Канал удалён',
+      networkErr: 'Ошибка соединения',
+      unknownErr: 'Неизвестная ошибка',
+    },
   },
 };
