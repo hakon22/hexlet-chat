@@ -56,7 +56,7 @@ const loadingSlice = createSlice({
         state.channels = channels;
         state.messages = messages;
         state.currentChannelId = currentChannelId;
-        state.loadingStatus = 'idle';
+        state.loadingStatus = 'finish';
         state.error = null;
       })
       .addCase(fetchLoading.rejected, (state, action) => {

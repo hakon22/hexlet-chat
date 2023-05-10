@@ -4,6 +4,7 @@ import {
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { useState, useMemo } from 'react';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
 import { io } from 'socket.io-client';
 import Page404 from '../pages/Page404.jsx';
@@ -52,22 +53,38 @@ const App = () => {
 
   const username = window.localStorage.getItem('username');
 
+  const rollbarConfig = {
+    accessToken: 'be22f4fbc46d4f9ab5f9868e1831520f',
+    environment: 'testenv',
+  };
+
+  function TestError() {
+    const a = null;
+    return a.hello();
+  }
+
   return (
     <Provider store={store}>
       <AuthContext.Provider value={authServices}>
-        <div className="d-flex flex-column h-100">
-          <BrowserRouter>
-            <Nav />
-            <ToastContainer />
-            <Routes>
-              <Route path="/" element={username ? <Main api={api} /> : <Navigate to="/login" />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="*" element={<Page404 />} />
-            </Routes>
-          </BrowserRouter>
-        </div>
+        <RollbarProvider config={rollbarConfig}>
+          <ErrorBoundary>
+            <TestError />
+            <div className="d-flex flex-column h-100">
+              <BrowserRouter>
+                <Nav />
+                <ToastContainer />
+                <Routes>
+                  <Route path="/" element={username ? <Main api={api} /> : <Navigate to="/login" />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="*" element={<Page404 />} />
+                </Routes>
+              </BrowserRouter>
+            </div>
+          </ErrorBoundary>
+        </RollbarProvider>
       </AuthContext.Provider>
+
     </Provider>
   );
 };
