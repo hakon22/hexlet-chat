@@ -58,17 +58,11 @@ const App = () => {
     environment: 'testenv',
   };
 
-  function TestError() {
-    const a = null;
-    return a.hello();
-  }
-
   return (
     <Provider store={store}>
       <AuthContext.Provider value={authServices}>
         <RollbarProvider config={rollbarConfig}>
           <ErrorBoundary>
-            <TestError />
             <div className="d-flex flex-column h-100">
               <BrowserRouter>
                 <Nav />
@@ -84,7 +78,6 @@ const App = () => {
           </ErrorBoundary>
         </RollbarProvider>
       </AuthContext.Provider>
-
     </Provider>
   );
 };
