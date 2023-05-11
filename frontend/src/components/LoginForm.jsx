@@ -53,12 +53,12 @@ const LoginForm = () => {
           <Form className="col-12 col-md-6 mt-3 mt-mb-0">
             <h1 className="text-center mb-4">{t('to_come')}</h1>
             <div className="form-floating mb-3">
-              <Field ref={input} autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />
+              <Field ref={input} id="username" autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />
               <label htmlFor="username">{t('you_nick')}</label>
               {errors.username && <div className="invalid-tooltip">{errors.username}</div>}
             </div>
             <div className="form-floating mb-4">
-              <Field name="password" type="password" className={styleInput} placeholder={t('you_pass')} required />
+              <Field name="password" id="password" type="password" className={styleInput} placeholder={t('you_pass')} required />
               <label htmlFor="password">{t('you_pass')}</label>
               {storeErrors && !errors.password && <div className="invalid-tooltip">{storeErrors}</div>}
               {errors.password && <div className="invalid-tooltip">{errors.password}</div>}
