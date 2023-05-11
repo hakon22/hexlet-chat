@@ -75,7 +75,9 @@ const Main = ({ api }) => {
                               'btn-secondary': channel.id === currentChannelId,
                             })}
                             id="dropdown-split-basic"
-                          />
+                          >
+                            <span className="visually-hidden">Управление каналом</span>
+                          </Dropdown.Toggle>
                           <Dropdown.Menu
                             id={`dropdown-button-drop-${channel.id}`}
                             size="sm"
