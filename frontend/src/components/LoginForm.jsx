@@ -1,9 +1,7 @@
 import { Formik, Form, Field } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  useEffect, useContext, useState, useRef,
-} from 'react';
+import { useDispatch } from 'react-redux';
+import { useEffect, useContext, useState } from 'react';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import { fetchToken } from '../slices/loginSlice.js';
@@ -13,8 +11,7 @@ const LoginForm = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { loggedIn, logIn } = useContext(AuthContext);
-  const [storeErrors, setErrors] = useState(useSelector((state) => state.login.message));
-  const input = useRef();
+  const [storeErrors, setErrors] = useState(null);
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string().required(t('validation.required')),
@@ -24,9 +21,6 @@ const LoginForm = () => {
   useEffect(() => {
     if (loggedIn) {
       window.location.replace('/');
-    }
-    if (storeErrors) {
-      setTimeout(() => input.current.focus(), 1);
     }
   }, [loggedIn, storeErrors]);
   return (
@@ -53,7 +47,7 @@ const LoginForm = () => {
           <Form className="col-12 col-md-6 mt-3 mt-mb-0">
             <h1 className="text-center mb-4">{t('to_come')}</h1>
             <div className="form-floating mb-3">
-              <Field ref={input} id="username" autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />
+              <Field id="username" autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />
               <label htmlFor="username">{t('you_nick')}</label>
               {errors.username && <div className="invalid-tooltip">{errors.username}</div>}
             </div>

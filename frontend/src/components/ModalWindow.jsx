@@ -71,7 +71,7 @@ export const ModalAdd = ({ api }) => {
             onSubmit={formik.handleSubmit}
           >
             <Form.Group controlId="newChannel">
-              <Form.Label className="visually-hidden">ChannelName</Form.Label>
+              <Form.Label className="visually-hidden">Имя канала</Form.Label>
               <Form.Control
                 className="mb-2"
                 onChange={formik.handleChange}
@@ -165,7 +165,7 @@ export const ModalRename = ({
             onSubmit={formik.handleSubmit}
           >
             <Form.Group controlId="input">
-              <Form.Label className="visually-hidden">ChannelRename</Form.Label>
+              <Form.Label className="visually-hidden">Новое имя канала</Form.Label>
               <Form.Control
                 autoFocus
                 ref={input}

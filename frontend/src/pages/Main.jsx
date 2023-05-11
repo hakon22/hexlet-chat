@@ -17,7 +17,7 @@ const Main = ({ api }) => {
   } = useSelector((state) => state.loading);
   const [messageValue, setMessage] = useState('');
   const [isSubmit, setSubmit] = useState(false);
-  const lastChannels = channels.length > 0 ? channels.at(-1).id : null;
+  const lastChannels = channels.length > 0 ? channels[channels.length - 1].id : null;
   const input = useRef();
   const chatRef = useRef();
   const channelsRef = useRef();
