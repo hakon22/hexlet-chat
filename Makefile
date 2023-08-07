@@ -4,6 +4,9 @@ start:
 install:
 	npm i && npm -C frontend i
 
+build:
+	npm run build --prefix frontend
+
 publish:
 	npm publish --access=public
 
