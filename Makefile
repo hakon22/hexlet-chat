@@ -1,5 +1,5 @@
 start:
-	node bin/index.js
+	npx start-server -s ./frontend/build
 
 install:
 	npm i && npm -C frontend i
