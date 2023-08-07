@@ -2,13 +2,13 @@
   "name": "@hexlet/chat-server",
   "version": "1.1.6",
   "description": "",
-  "main": "plugin.js",
+  "main": "src/plugin.js",
   "type": "module",
   "bin": {
     "start-server": "./bin/index.js"
   },
   "scripts": {
-    "start": "npx fastify start plugin.js -l info -P -a 0.0.0.0 -p 10000"
+    "start": "npx fastify start src/plugin.js -l info -P -a 0.0.0.0"
   },
   "author": "",
   "license": "ISC",

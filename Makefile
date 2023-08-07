@@ -1,5 +1,5 @@
 start:
-	npm start
+	node bin/index.js
 
 install:
 	npm i && npm -C frontend i
