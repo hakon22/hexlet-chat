@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://0.0.0.0:10000",
+  "proxy": "http://0.0.0.0:3001",
   "main": "src/index.jsx",
   "dependencies": {
     "@jridgewell/sourcemap-codec": "^1.4.15",
