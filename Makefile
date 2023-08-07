@@ -1,17 +1,15 @@
-lint-frontend:
-	make -C frontend lint
+start:
+	npm start
 
 install:
 	npm i && npm -C frontend i
 
-start-frontend:
-	npm -C frontend start
+publish:
+	npm publish --access=public
 
-start-backend:
-	npx start-server -s ./frontend/build
+# TODO: добавить линтеры и тесты
+lint:
+	npx eslint .
 
-deploy:
-	git push heroku main
-
-start:
-	make start-backend & make start-frontend
+test:
+	echo no tests
