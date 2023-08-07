@@ -7,12 +7,11 @@ install:
 build:
 	npm run build --prefix frontend
 
+lint-frontend:
+	cd frontend && npx eslint .
+
 publish:
 	npm publish --access=public
-
-# TODO: добавить линтеры и тесты
-lint:
-	npx eslint .
 
 test:
 	echo no tests
