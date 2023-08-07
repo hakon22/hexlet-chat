@@ -6,7 +6,7 @@ import { program } from 'commander';
 import plugin from '../src/plugin.js';
 
 const port = process.env.PORT || 3001;
-const staticPath = path.join(process.cwd(), 'build');
+const staticPath = path.join(process.cwd(), 'frontend', 'build');
 
 program
   .version('1.1.3', '-v, --version')
