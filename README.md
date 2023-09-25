@@ -1,4 +1,4 @@
-[![Project screan](https://i.ibb.co/N6t3BnJ/6478cc27bbd4a1340379e0c1.png)](https://hexlet-chat-jfdi.onrender.com/)
+[![Project screan](https://i.ibb.co/N6t3BnJ/6478cc27bbd4a1340379e0c1.png)](https://portfolio.am-projects.ru/chat/)
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/hakon22/frontend-project-12/workflows/hexlet-check/badge.svg)](https://github.com/hakon22/frontend-project-12/actions)

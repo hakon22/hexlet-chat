@@ -16,7 +16,7 @@ const SignupForm = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      window.location.replace('/');
+      window.location.replace('/chat');
     }
   }, [loggedIn]);
 
@@ -42,7 +42,7 @@ const SignupForm = () => {
   return (
     <Form
       onSubmit={formik.handleSubmit}
-      className="w-50"
+      className="col-12 col-md-6 mt-3"
     >
       <h1 className="text-center mb-4">{t('signup.title')}</h1>
       <Form.Group className="form-floating mb-3" controlId="username">

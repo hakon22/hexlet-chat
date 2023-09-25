@@ -20,7 +20,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      window.location.replace('/');
+      window.location.replace('/chat');
     }
   }, [loggedIn, storeErrors]);
   return (
@@ -44,7 +44,7 @@ const LoginForm = () => {
           'is-invalid': storeErrors,
         });
         return (
-          <Form className="col-12 col-md-6 mt-3 mt-mb-0">
+          <Form className="col-12 col-md-6 mt-3">
             <h1 className="text-center mb-4">{t('to_come')}</h1>
             <div className="form-floating mb-3">
               <Field id="username" autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />

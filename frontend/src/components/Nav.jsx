@@ -18,7 +18,7 @@ const Nav = () => {
           type="button"
           onClick={() => {
             logOut();
-            window.location.href = '/login';
+            window.location.href = '/chat/login';
           }}
           className="btn btn-primary"
         >

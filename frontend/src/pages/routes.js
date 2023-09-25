@@ -1,4 +1,4 @@
-const apiPath = '/api/v1';
+const apiPath = '/chat/api';
 
 export default {
   login: [apiPath, 'login'].join('/'),

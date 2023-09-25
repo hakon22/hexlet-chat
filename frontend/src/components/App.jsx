@@ -28,7 +28,7 @@ const App = () => {
 
   const authServices = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
 
-  const socket = io();
+  const socket = io('wss://portfolio.am-projects.ru', { path: '/chat/socket.io' });
 
   const socketConnect = (param, arg) => socket.emit(param, arg, (response) => {
     if (!response) {
@@ -64,7 +64,7 @@ const App = () => {
         <RollbarProvider config={rollbarConfig}>
           <ErrorBoundary>
             <div className="d-flex flex-column h-100">
-              <BrowserRouter>
+              <BrowserRouter basename="/chat">
                 <Nav />
                 <ToastContainer />
                 <Routes>

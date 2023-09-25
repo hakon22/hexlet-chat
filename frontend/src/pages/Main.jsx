@@ -112,7 +112,7 @@ const Main = ({ api }) => {
                 </p>
                 <span className="text-muted">{t('count_message', { count: messages.filter((mes) => mes.channelId === currentChannelId).length })}</span>
               </div>
-              <div ref={chatRef} id="messages-box" className="chat-messages overflow-auto px-5 ">
+              <div ref={chatRef} id="messages-box" className="chat-messages overflow-auto px-2 px-md-5">
                 {messages.length > 0 && messages.map((message) => {
                   if (message.channelId === currentChannelId) {
                     return (
@@ -128,7 +128,7 @@ const Main = ({ api }) => {
                   return null;
                 })}
               </div>
-              <div className="mt-auto px-5 py-3">
+              <div className="mt-auto px-2 px-md-5 py-3">
                 <form
                   noValidate
                   onSubmit={(e) => {
